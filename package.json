@@ -1,7 +1,7 @@
 {
   "name": "ask-colleague",
-  "version": "0.4.0",
-  "description": "A dependency-free bridge that lets Claude Code and Codex ask each other for one-shot peer review advice.",
+  "version": "0.1.0",
+  "description": "Ask a colleague, a bridge that lets Claude Code and Codex ask each other for one-shot peer advice.",
   "license": "MIT",
   "homepage": "https://github.com/stevyhacker/ask-colleague#readme",
   "repository": {
