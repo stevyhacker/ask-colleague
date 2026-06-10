@@ -8,46 +8,15 @@ npx ask-colleague@latest install
 
 `npx` runs the npm package's executable once. The executable then copies the long-lived `colleague` command and both skill files into the user's home directory, recording checksums in `~/.ask-colleague/install-manifest.tsv`.
 
-## 1. Pick the package name
+## 1. Check package metadata
 
-The starter `package.json` uses:
+`package.json` must agree with the rest of the repo before each publish:
 
-```json
-"name": "ask-colleague"
-```
+- `version` matches `VERSION` in `bin/colleague` and the version checks in `tests/smoke.sh`
+- `homepage`, `repository`, and `bugs` point at the public GitHub repo
+- `bin` maps both `ask-colleague` and `colleague` to `bin/colleague`
 
-Before publishing, check that the package name is available. If it is taken, use a scoped package name instead:
-
-```json
-"name": "@your-scope/ask-colleague"
-```
-
-With a scoped name, the install command becomes:
-
-```bash
-npx @your-scope/ask-colleague@latest install
-```
-
-## 2. Add public repository metadata
-
-This starter package intentionally does not include fake GitHub metadata. Before publishing from your real repo, add fields like:
-
-```json
-{
-  "homepage": "https://github.com/<owner>/<repo>#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/<owner>/<repo>.git"
-  },
-  "bugs": {
-    "url": "https://github.com/<owner>/<repo>/issues"
-  }
-}
-```
-
-Also replace `<your-ask-colleague-repo-url>` in `README.md`.
-
-## 3. Run local checks
+## 2. Run local checks
 
 ```bash
 npm test
@@ -57,14 +26,12 @@ npm pack --dry-run
 Then build a real local tarball and run it through `npx`:
 
 ```bash
-npm pack --pack-destination /tmp
-npx --yes --package /tmp/ask-colleague-0.4.0.tgz ask-colleague --version
-npx --yes --package /tmp/ask-colleague-0.4.0.tgz ask-colleague install --dry-run
+tgz="/tmp/$(npm pack --pack-destination /tmp | tail -n 1)"
+npx --yes --package "$tgz" ask-colleague --version
+npx --yes --package "$tgz" ask-colleague install --dry-run
 ```
 
-If you changed the package name or version, update the tarball path accordingly.
-
-## 4. Inspect package contents
+## 3. Inspect package contents
 
 Make sure the npm tarball includes only what users need:
 
@@ -95,7 +62,7 @@ docs/security.md
 docs/publishing.md
 ```
 
-## 5. Publish
+## 4. Publish
 
 ```bash
 npm login
@@ -104,7 +71,7 @@ npm publish --access public
 
 For scoped packages, `--access public` is required unless your npm account/org has different defaults.
 
-## 6. Verify public install
+## 5. Verify public install
 
 After npm finishes publishing:
 
@@ -128,7 +95,7 @@ colleague uninstall --dry-run
 colleague uninstall
 ```
 
-## 7. Optional AGENTS.md fallback
+## 6. Optional AGENTS.md fallback
 
 Do not enable the global Codex AGENTS.md fallback by default in release notes. Users who want it can opt in:
 
@@ -136,7 +103,7 @@ Do not enable the global Codex AGENTS.md fallback by default in release notes. U
 npx ask-colleague@latest install --agents-md
 ```
 
-## 8. Release updates
+## 7. Release updates
 
 Bump the version before each publish:
 

@@ -1,5 +1,7 @@
 # Ask Colleague
 
+[![npm version](https://img.shields.io/npm/v/ask-colleague.svg)](https://www.npmjs.com/package/ask-colleague)
+
 A tiny, self-contained bridge that lets one local AI coding CLI ask another local AI coding CLI for a one-shot second opinion.
 
 The default flow:
@@ -29,8 +31,6 @@ That makes “ask a colleague” just a local shell bridge:
 4. continue in the original session
 
 ## Install with npx
-
-After this package is published to npm:
 
 ```bash
 npx ask-colleague@latest install
@@ -359,14 +359,12 @@ Before publishing, test the exact tarball that npm would distribute:
 ```bash
 npm test
 npm pack --dry-run
-npm pack --pack-destination /tmp
-npx --yes --package /tmp/ask-colleague-0.4.0.tgz ask-colleague --version
-npx --yes --package /tmp/ask-colleague-0.4.0.tgz ask-colleague install --dry-run
+tgz="/tmp/$(npm pack --pack-destination /tmp | tail -n 1)"
+npx --yes --package "$tgz" ask-colleague --version
+npx --yes --package "$tgz" ask-colleague install --dry-run
 ```
 
 ## Publish to npm
-
-Before publishing, check the package name and add repository metadata to `package.json` if you have a public repo URL ready.
 
 ```bash
 npm login

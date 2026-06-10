@@ -217,7 +217,7 @@ fi
 assert_contains "$fail_err" "mock codex failure on stdout"
 
 if command -v node >/dev/null 2>&1; then
-  node -e "const p=require('$ROOT_DIR/package.json'); if (p.version !== '0.4.0' || !p.bin || p.bin['ask-colleague'] !== 'bin/colleague' || p.bin.colleague !== 'bin/colleague') process.exit(1);"
+  node -e "const p=require('$ROOT_DIR/package.json'); if (p.version !== '0.4.0' || !p.bin || p.bin['ask-colleague'] !== 'bin/colleague' || p.bin.colleague !== 'bin/colleague') { console.error('package.json mismatch: expected version 0.4.0 with ask-colleague/colleague bin entries, got version ' + p.version); process.exit(1); }"
 fi
 
 if command -v npm >/dev/null 2>&1; then
