@@ -1,6 +1,6 @@
 {
   "name": "ask-colleague",
-  "version": "0.4.1",
+  "version": "0.1.1",
   "description": "Ask a colleague, a bridge that lets Claude Code and Codex ask each other for one-shot peer advice.",
   "license": "MIT",
   "homepage": "https://github.com/stevyhacker/ask-colleague#readme",

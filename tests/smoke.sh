@@ -45,13 +45,13 @@ assert_contains "$help_out" "--agents-md"
 assert_contains "$help_out" "--force"
 
 version_out="$($BIN --version)"
-assert_contains "$version_out" "0.4.1"
+assert_contains "$version_out" "0.1.1"
 
 # The npm bin launcher must delegate to the Bash CLI with identical behavior.
 if command -v node >/dev/null 2>&1; then
   node --check "$ROOT_DIR/bin/colleague.js"
   launcher_out="$(node "$ROOT_DIR/bin/colleague.js" --version)"
-  assert_contains "$launcher_out" "0.4.1"
+  assert_contains "$launcher_out" "0.1.1"
   launcher_status=0
   node "$ROOT_DIR/bin/colleague.js" ask codex --context /nonexistent --question "x" --dry-run >/dev/null 2>&1 || launcher_status=$?
   if [[ "$launcher_status" -eq 0 ]]; then
@@ -230,7 +230,7 @@ fi
 assert_contains "$fail_err" "mock codex failure on stdout"
 
 if command -v node >/dev/null 2>&1; then
-  node -e "const p=require('$ROOT_DIR/package.json'); if (p.version !== '0.4.1' || !p.bin || p.bin['ask-colleague'] !== 'bin/colleague.js' || p.bin.colleague !== 'bin/colleague.js') { console.error('package.json mismatch: expected version 0.4.1 with ask-colleague/colleague bin entries pointing at bin/colleague.js, got version ' + p.version); process.exit(1); }"
+  node -e "const p=require('$ROOT_DIR/package.json'); if (p.version !== '0.1.1' || !p.bin || p.bin['ask-colleague'] !== 'bin/colleague.js' || p.bin.colleague !== 'bin/colleague.js') { console.error('package.json mismatch: expected version 0.1.1 with ask-colleague/colleague bin entries pointing at bin/colleague.js, got version ' + p.version); process.exit(1); }"
 fi
 
 if command -v npm >/dev/null 2>&1; then
@@ -239,7 +239,7 @@ if command -v npm >/dev/null 2>&1; then
   tgz="$TMP_DIR/$pack_name"
   [[ -f "$tgz" ]]
   npx_version="$(npx --yes --package "$tgz" ask-colleague --version)"
-  assert_contains "$npx_version" "0.4.1"
+  assert_contains "$npx_version" "0.1.1"
   npx_install_dry_run="$(npx --yes --package "$tgz" ask-colleague install --dry-run --prefix "$TMP_DIR/npx-prefix")"
   assert_contains "$npx_install_dry_run" "Installed colleague binary"
   assert_contains "$npx_install_dry_run" "Skipped ~/.codex/AGENTS.md fallback block"

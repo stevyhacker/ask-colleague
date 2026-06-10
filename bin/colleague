@@ -3,7 +3,7 @@
 # Works with Codex (`codex exec -`) and Claude Code (`cat prompt | claude -p ...`).
 set -euo pipefail
 
-VERSION="0.4.1"
+VERSION="0.1.1"
 DEFAULT_MAX_BYTES="${COLLEAGUE_MAX_CONTEXT_BYTES:-120000}"
 STATE_DIR="${COLLEAGUE_STATE_DIR:-$HOME/.ask-colleague}"
 MANIFEST="$STATE_DIR/install-manifest.tsv"
