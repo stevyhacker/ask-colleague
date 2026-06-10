@@ -14,7 +14,7 @@ npx ask-colleague@latest install
 
 - `version` matches `VERSION` in `bin/colleague` and the version checks in `tests/smoke.sh`
 - `homepage`, `repository`, and `bugs` point at the public GitHub repo
-- `bin` maps both `ask-colleague` and `colleague` to `bin/colleague`
+- `bin` maps both `ask-colleague` and `colleague` to `bin/colleague.js`
 
 ## 2. Run local checks
 
@@ -47,6 +47,7 @@ README.md
 LICENSE
 CONTRIBUTING.md
 bin/colleague
+bin/colleague.js
 install.sh
 uninstall.sh
 scripts/ask-codex.sh

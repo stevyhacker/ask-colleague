@@ -91,6 +91,10 @@ npx ask-colleague@latest uninstall
 
 Uninstall removes only files recorded in `~/.ask-colleague/install-manifest.tsv` and only if their checksums still match. If you edited an installed skill or prompt, uninstall leaves it in place and tells you to use `--force` if you really want it removed.
 
+### Windows
+
+`colleague` is a Bash CLI. On Windows, run everything — `npx`, the install, and the `claude`/`codex` CLIs — inside WSL (recommended) or Git Bash (best effort). Running `npx ask-colleague@latest install` from PowerShell or cmd.exe prints setup guidance instead of failing on a missing Bash.
+
 ## Install from source
 
 ```bash
@@ -261,7 +265,8 @@ Good question:
 
 ```text
 ask-colleague/
-  bin/colleague                         # main bridge CLI and npm bin target
+  bin/colleague                         # main bridge CLI (Bash)
+  bin/colleague.js                      # Node launcher for the npm bin (Windows-safe)
   package.json                          # npm package metadata and bin mappings
   scripts/ask-codex.sh                  # compatibility wrapper
   scripts/ask-claude.sh                 # compatibility wrapper
@@ -277,6 +282,10 @@ ask-colleague/
 ```
 
 ## Troubleshooting
+
+### `WSL ... execvpe(/bin/bash) failed: No such file or directory` on Windows
+
+Older versions (0.1.0) pointed the npm bin directly at the Bash script, so PowerShell invoked the WSL bash stub, which fails like this when no Linux distribution is installed. Upgrade with `npx ask-colleague@latest install` — current versions detect this and print setup guidance. Then run the bridge inside WSL or Git Bash as described in the Windows section above.
 
 ### `colleague: codex CLI not found in PATH`
 
@@ -331,11 +340,13 @@ The smoke tests use dry-run and mocked CLI paths, so they do not require authent
 ```json
 {
   "bin": {
-    "ask-colleague": "bin/colleague",
-    "colleague": "bin/colleague"
+    "ask-colleague": "bin/colleague.js",
+    "colleague": "bin/colleague.js"
   }
 }
 ```
+
+`bin/colleague.js` is a tiny Node launcher that delegates to the Bash CLI. It exists because npm's Windows shims would otherwise hand the Bash script to the WSL bash stub, which fails cryptically when no Linux distribution is installed. The launcher runs the script with a real Bash where one exists and prints setup guidance otherwise.
 
 This means:
 

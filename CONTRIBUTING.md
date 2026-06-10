@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for improving Agent Colleague.
+Thanks for improving Ask Colleague.
 
 ## Local checks
 
@@ -13,9 +13,9 @@ bash -n bin/colleague install.sh uninstall.sh scripts/ask-codex.sh scripts/ask-c
 For an end-to-end local `npx` check:
 
 ```bash
-npm pack --pack-destination /tmp
-npx --yes --package /tmp/agent-colleague-0.4.0.tgz agent-colleague --version
-npx --yes --package /tmp/agent-colleague-0.4.0.tgz agent-colleague install --dry-run
+tgz="/tmp/$(npm pack --pack-destination /tmp | tail -n 1)"
+npx --yes --package "$tgz" ask-colleague --version
+npx --yes --package "$tgz" ask-colleague install --dry-run
 ```
 
 ## Design constraints
