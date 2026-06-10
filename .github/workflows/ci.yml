@@ -1,0 +1,20 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Smoke tests
+        run: ./tests/smoke.sh
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+      - name: ShellCheck
+        run: |
+          shellcheck bin/colleague install.sh uninstall.sh scripts/ask-codex.sh scripts/ask-claude.sh tests/smoke.sh

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Colleague"
+  short_description: "Ask Claude Code for a one-shot second opinion."
+policy:
+  allow_implicit_invocation: false

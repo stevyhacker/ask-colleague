@@ -1,0 +1,42 @@
+{
+  "name": "agent-colleague",
+  "version": "0.4.0",
+  "description": "A dependency-free bridge that lets Claude Code and Codex ask each other for one-shot peer review advice.",
+  "license": "MIT",
+  "keywords": [
+    "agent",
+    "ai",
+    "claude-code",
+    "codex",
+    "cli",
+    "skills",
+    "peer-review",
+    "coding-agent"
+  ],
+  "bin": {
+    "agent-colleague": "bin/colleague",
+    "colleague": "bin/colleague"
+  },
+  "files": [
+    "bin/",
+    "scripts/",
+    "skills/",
+    "snippets/",
+    "prompts/",
+    "templates/",
+    "docs/",
+    "install.sh",
+    "uninstall.sh",
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md"
+  ],
+  "scripts": {
+    "test": "bash tests/smoke.sh",
+    "pack:check": "npm pack --dry-run",
+    "local:npx": "npm pack --pack-destination /tmp >/tmp/agent-colleague-pack-name && npx --yes --package /tmp/$(cat /tmp/agent-colleague-pack-name) agent-colleague --version"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

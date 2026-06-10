@@ -1,0 +1,8 @@
+# Kept mostly for humans; package.json#files is the authoritative allowlist.
+.DS_Store
+.git/
+.github/
+node_modules/
+npm-debug.log*
+*.tgz
+*.zip
