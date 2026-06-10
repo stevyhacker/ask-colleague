@@ -1,4 +1,4 @@
-# Agent Colleague
+# Ask Colleague
 
 A tiny, self-contained bridge that lets one local AI coding CLI ask another local AI coding CLI for a one-shot second opinion.
 
@@ -11,7 +11,7 @@ The default flow:
 This repository packages the pattern as:
 
 - one dependency-free Bash CLI: `bin/colleague`
-- one npm package: `agent-colleague`
+- one npm package: `ask-colleague`
 - one Claude Code skill: `skills/claude/colleague/SKILL.md`
 - one Codex skill: `skills/codex/colleague/SKILL.md`
 - install/uninstall scripts with a safety manifest
@@ -33,22 +33,22 @@ That makes “ask a colleague” just a local shell bridge:
 After this package is published to npm:
 
 ```bash
-npx agent-colleague@latest install
+npx ask-colleague@latest install
 ```
 
 That one command installs:
 
 ```text
 ~/.local/bin/colleague
-~/.local/bin/agent-colleague
+~/.local/bin/ask-colleague
 ~/.claude/skills/colleague/SKILL.md
 ~/.agents/skills/colleague/SKILL.md
 ~/.agents/skills/colleague/agents/openai.yaml
 ~/.codex/prompts/colleague.md          # legacy Codex custom prompt fallback
-~/.agent-colleague/install-manifest.tsv
+~/.ask-colleague/install-manifest.tsv
 ```
 
-The installer refuses to overwrite existing files unless they are tracked in the install manifest and have not been modified. Use `--force` only when you intentionally want to replace an existing agent-colleague install.
+The installer refuses to overwrite existing files unless they are tracked in the install manifest and have not been modified. Use `--force` only when you intentionally want to replace an existing ask-colleague install.
 
 Make sure `~/.local/bin` is in your `PATH`:
 
@@ -65,10 +65,10 @@ colleague doctor
 Install only selected parts:
 
 ```bash
-npx agent-colleague@latest install --bin
-npx agent-colleague@latest install --claude
-npx agent-colleague@latest install --codex
-npx agent-colleague@latest install --prefix "$HOME/bin"
+npx ask-colleague@latest install --bin
+npx ask-colleague@latest install --claude
+npx ask-colleague@latest install --codex
+npx ask-colleague@latest install --prefix "$HOME/bin"
 ```
 
 ### Optional global Codex fallback
@@ -76,7 +76,7 @@ npx agent-colleague@latest install --prefix "$HOME/bin"
 By default, install does **not** modify `~/.codex/AGENTS.md`, because that file affects every Codex session. To opt into the fallback block for Codex versions that do not load skills or prompts the way you expect, run:
 
 ```bash
-npx agent-colleague@latest install --agents-md
+npx ask-colleague@latest install --agents-md
 ```
 
 The AGENTS.md block is marker-delimited and idempotent. `colleague uninstall` removes it only when it was recorded in the install manifest, or when you pass `--force` for a legacy uninstall.
@@ -86,20 +86,20 @@ Uninstall:
 ```bash
 colleague uninstall
 # or, without relying on the installed command:
-npx agent-colleague@latest uninstall
+npx ask-colleague@latest uninstall
 ```
 
-Uninstall removes only files recorded in `~/.agent-colleague/install-manifest.tsv` and only if their checksums still match. If you edited an installed skill or prompt, uninstall leaves it in place and tells you to use `--force` if you really want it removed.
+Uninstall removes only files recorded in `~/.ask-colleague/install-manifest.tsv` and only if their checksums still match. If you edited an installed skill or prompt, uninstall leaves it in place and tells you to use `--force` if you really want it removed.
 
 ## Install from source
 
 ```bash
-git clone <your-agent-colleague-repo-url>
-cd agent-colleague
+git clone https://github.com/stevyhacker/ask-colleague.git
+cd ask-colleague
 ./install.sh
 ```
 
-This performs the same install as `npx agent-colleague@latest install`.
+This performs the same install as `npx ask-colleague@latest install`.
 
 ## Direct CLI usage
 
@@ -180,7 +180,7 @@ The install wires up the Codex → Claude direction in two default ways, plus on
 3. **AGENTS.md block** — opt-in only:
 
    ```bash
-   npx agent-colleague@latest install --agents-md
+   npx ask-colleague@latest install --agents-md
    ```
 
 You can also copy `snippets/AGENTS.md` into a project-level `AGENTS.md` if you want the fallback available only in specific repos.
@@ -209,7 +209,7 @@ export COLLEAGUE_CODEX_SANDBOX="read-only"
 export COLLEAGUE_TIMEOUT="120"
 export COLLEAGUE_VERBOSE="1"
 export COLLEAGUE_MAX_CONTEXT_BYTES="120000"
-export COLLEAGUE_STATE_DIR="$HOME/.agent-colleague"
+export COLLEAGUE_STATE_DIR="$HOME/.ask-colleague"
 ```
 
 ## Safety model
@@ -260,7 +260,7 @@ Good question:
 ## Repository layout
 
 ```text
-agent-colleague/
+ask-colleague/
   bin/colleague                         # main bridge CLI and npm bin target
   package.json                          # npm package metadata and bin mappings
   scripts/ask-codex.sh                  # compatibility wrapper
@@ -288,7 +288,7 @@ Install Claude Code and confirm `claude --version` works in the same shell where
 
 ### Install refuses to overwrite a file
 
-The file already exists and is not tracked as an unmodified agent-colleague install. Inspect it first. Re-run with `--force` only if it belongs to this package and should be replaced.
+The file already exists and is not tracked as an unmodified ask-colleague install. Inspect it first. Re-run with `--force` only if it belongs to this package and should be replaced.
 
 ### Uninstall leaves a file in place
 
@@ -331,7 +331,7 @@ The smoke tests use dry-run and mocked CLI paths, so they do not require authent
 ```json
 {
   "bin": {
-    "agent-colleague": "bin/colleague",
+    "ask-colleague": "bin/colleague",
     "colleague": "bin/colleague"
   }
 }
@@ -340,13 +340,13 @@ The smoke tests use dry-run and mocked CLI paths, so they do not require authent
 This means:
 
 ```bash
-npx agent-colleague@latest install
+npx ask-colleague@latest install
 ```
 
-runs the package command named `agent-colleague`, while a global install also provides both `agent-colleague` and `colleague` commands:
+runs the package command named `ask-colleague`, while a global install also provides both `ask-colleague` and `colleague` commands:
 
 ```bash
-npm install --global agent-colleague
+npm install --global ask-colleague
 colleague doctor
 ```
 
@@ -360,8 +360,8 @@ Before publishing, test the exact tarball that npm would distribute:
 npm test
 npm pack --dry-run
 npm pack --pack-destination /tmp
-npx --yes --package /tmp/agent-colleague-0.4.0.tgz agent-colleague --version
-npx --yes --package /tmp/agent-colleague-0.4.0.tgz agent-colleague install --dry-run
+npx --yes --package /tmp/ask-colleague-0.4.0.tgz ask-colleague --version
+npx --yes --package /tmp/ask-colleague-0.4.0.tgz ask-colleague install --dry-run
 ```
 
 ## Publish to npm

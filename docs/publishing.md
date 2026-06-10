@@ -1,31 +1,31 @@
-# Publishing Agent Colleague to npm
+# Publishing Ask Colleague to npm
 
 This package is designed so the public install path is one command:
 
 ```bash
-npx agent-colleague@latest install
+npx ask-colleague@latest install
 ```
 
-`npx` runs the npm package's executable once. The executable then copies the long-lived `colleague` command and both skill files into the user's home directory, recording checksums in `~/.agent-colleague/install-manifest.tsv`.
+`npx` runs the npm package's executable once. The executable then copies the long-lived `colleague` command and both skill files into the user's home directory, recording checksums in `~/.ask-colleague/install-manifest.tsv`.
 
 ## 1. Pick the package name
 
 The starter `package.json` uses:
 
 ```json
-"name": "agent-colleague"
+"name": "ask-colleague"
 ```
 
 Before publishing, check that the package name is available. If it is taken, use a scoped package name instead:
 
 ```json
-"name": "@your-scope/agent-colleague"
+"name": "@your-scope/ask-colleague"
 ```
 
 With a scoped name, the install command becomes:
 
 ```bash
-npx @your-scope/agent-colleague@latest install
+npx @your-scope/ask-colleague@latest install
 ```
 
 ## 2. Add public repository metadata
@@ -45,7 +45,7 @@ This starter package intentionally does not include fake GitHub metadata. Before
 }
 ```
 
-Also replace `<your-agent-colleague-repo-url>` in `README.md`.
+Also replace `<your-ask-colleague-repo-url>` in `README.md`.
 
 ## 3. Run local checks
 
@@ -58,8 +58,8 @@ Then build a real local tarball and run it through `npx`:
 
 ```bash
 npm pack --pack-destination /tmp
-npx --yes --package /tmp/agent-colleague-0.4.0.tgz agent-colleague --version
-npx --yes --package /tmp/agent-colleague-0.4.0.tgz agent-colleague install --dry-run
+npx --yes --package /tmp/ask-colleague-0.4.0.tgz ask-colleague --version
+npx --yes --package /tmp/ask-colleague-0.4.0.tgz ask-colleague install --dry-run
 ```
 
 If you changed the package name or version, update the tarball path accordingly.
@@ -109,14 +109,14 @@ For scoped packages, `--access public` is required unless your npm account/org h
 After npm finishes publishing:
 
 ```bash
-npx agent-colleague@latest --version
-npx agent-colleague@latest install --dry-run
+npx ask-colleague@latest --version
+npx ask-colleague@latest install --dry-run
 ```
 
 Then do a real install in a clean shell:
 
 ```bash
-npx agent-colleague@latest install
+npx ask-colleague@latest install
 export PATH="$HOME/.local/bin:$PATH"
 colleague doctor
 ```
@@ -133,7 +133,7 @@ colleague uninstall
 Do not enable the global Codex AGENTS.md fallback by default in release notes. Users who want it can opt in:
 
 ```bash
-npx agent-colleague@latest install --agents-md
+npx ask-colleague@latest install --agents-md
 ```
 
 ## 8. Release updates
@@ -151,4 +151,4 @@ Use `minor` for new features and `major` for breaking changes.
 
 - The package intentionally has no runtime npm dependencies.
 - The executable is Bash, so the supported target environments are macOS, Linux, and WSL-like shells.
-- `npx agent-colleague@latest install` is a bootstrap. The persistent command after install is `colleague`.
+- `npx ask-colleague@latest install` is a bootstrap. The persistent command after install is `colleague`.

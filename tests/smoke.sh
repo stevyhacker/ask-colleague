@@ -72,7 +72,7 @@ assert_contains "$install_dry_run" "Installed Claude Code skill"
 assert_contains "$install_dry_run" "Installed legacy Codex custom prompt"
 assert_contains "$install_dry_run" "Skipped ~/.codex/AGENTS.md fallback block"
 assert_not_contains "$install_dry_run" "Appended colleague block"
-assert_contains "$install_dry_run" "npx agent-colleague@latest install"
+assert_contains "$install_dry_run" "npx ask-colleague@latest install"
 
 install_agents_dry_run="$($BIN install --dry-run --codex --agents-md --prefix "$TMP_DIR/prefix")"
 assert_contains "$install_agents_dry_run" "append"
@@ -100,12 +100,12 @@ mkdir -p "$real_home"
 real_install_out="$(HOME="$real_home" PREFIX="$real_prefix" $BIN install)"
 assert_contains "$real_install_out" "Installed colleague binary"
 [[ -x "$real_prefix/bin/colleague" ]]
-[[ -x "$real_prefix/bin/agent-colleague" ]]
+[[ -x "$real_prefix/bin/ask-colleague" ]]
 [[ -f "$real_home/.claude/skills/colleague/SKILL.md" ]]
 [[ -f "$real_home/.agents/skills/colleague/SKILL.md" ]]
 [[ -f "$real_home/.agents/skills/colleague/agents/openai.yaml" ]]
 [[ -f "$real_home/.codex/prompts/colleague.md" ]]
-[[ -f "$real_home/.agent-colleague/install-manifest.tsv" ]]
+[[ -f "$real_home/.ask-colleague/install-manifest.tsv" ]]
 [[ ! -f "$real_home/.codex/AGENTS.md" ]]
 
 doctor_out="$(HOME="$real_home" PATH="$real_prefix/bin:$PATH" "$real_prefix/bin/colleague" doctor)"
@@ -116,11 +116,11 @@ assert_contains "$doctor_out" "Codex AGENTS.md block: absent"
 uninstall_out="$(HOME="$real_home" PATH="$real_prefix/bin:$PATH" "$real_prefix/bin/colleague" uninstall)"
 assert_contains "$uninstall_out" "Removed files tracked"
 [[ ! -e "$real_prefix/bin/colleague" ]]
-[[ ! -e "$real_prefix/bin/agent-colleague" ]]
+[[ ! -e "$real_prefix/bin/ask-colleague" ]]
 [[ ! -e "$real_home/.claude/skills/colleague/SKILL.md" ]]
 [[ ! -e "$real_home/.agents/skills/colleague/SKILL.md" ]]
 [[ ! -e "$real_home/.codex/prompts/colleague.md" ]]
-[[ ! -e "$real_home/.agent-colleague/install-manifest.tsv" ]]
+[[ ! -e "$real_home/.ask-colleague/install-manifest.tsv" ]]
 
 # Opt-in AGENTS.md install records and removes the marker block.
 agents_home="$TMP_DIR/agents-home"
@@ -128,9 +128,9 @@ agents_prefix="$TMP_DIR/agents-prefix"
 mkdir -p "$agents_home"
 HOME="$agents_home" PREFIX="$agents_prefix" $BIN install --agents-md >/dev/null
 [[ -f "$agents_home/.codex/AGENTS.md" ]]
-grep -q "BEGIN agent-colleague bridge" "$agents_home/.codex/AGENTS.md"
+grep -q "BEGIN ask-colleague bridge" "$agents_home/.codex/AGENTS.md"
 HOME="$agents_home" PATH="$agents_prefix/bin:$PATH" "$agents_prefix/bin/colleague" uninstall >/dev/null
-if [[ -f "$agents_home/.codex/AGENTS.md" ]] && grep -q "BEGIN agent-colleague bridge" "$agents_home/.codex/AGENTS.md"; then
+if [[ -f "$agents_home/.codex/AGENTS.md" ]] && grep -q "BEGIN ask-colleague bridge" "$agents_home/.codex/AGENTS.md"; then
   echo "expected uninstall to remove AGENTS.md block" >&2
   exit 1
 fi
@@ -138,17 +138,17 @@ fi
 # A malformed AGENTS.md marker must not cause uninstall to delete user content
 # after the begin marker.
 broken_agents_home="$TMP_DIR/broken-agents-home"
-mkdir -p "$broken_agents_home/.codex" "$broken_agents_home/.agent-colleague"
+mkdir -p "$broken_agents_home/.codex" "$broken_agents_home/.ask-colleague"
 cat > "$broken_agents_home/.codex/AGENTS.md" <<'BROKEN_AGENTS'
 user content before
-<!-- BEGIN agent-colleague bridge -->
+<!-- BEGIN ask-colleague bridge -->
 partial colleague block
 user content after malformed block
 BROKEN_AGENTS
-printf 'agents_block\tpresent\t%s\n' "$broken_agents_home/.codex/AGENTS.md" > "$broken_agents_home/.agent-colleague/install-manifest.tsv"
+printf 'agents_block\tpresent\t%s\n' "$broken_agents_home/.codex/AGENTS.md" > "$broken_agents_home/.ask-colleague/install-manifest.tsv"
 assert_fails env HOME="$broken_agents_home" PREFIX="$TMP_DIR/broken-agents-prefix" "$BIN" uninstall
 grep -q "user content after malformed block" "$broken_agents_home/.codex/AGENTS.md"
-[[ -f "$broken_agents_home/.agent-colleague/install-manifest.tsv" ]]
+[[ -f "$broken_agents_home/.ask-colleague/install-manifest.tsv" ]]
 
 # Overwrite protection.
 protect_home="$TMP_DIR/protect-home"
@@ -217,7 +217,7 @@ fi
 assert_contains "$fail_err" "mock codex failure on stdout"
 
 if command -v node >/dev/null 2>&1; then
-  node -e "const p=require('$ROOT_DIR/package.json'); if (p.version !== '0.4.0' || !p.bin || p.bin['agent-colleague'] !== 'bin/colleague' || p.bin.colleague !== 'bin/colleague') process.exit(1);"
+  node -e "const p=require('$ROOT_DIR/package.json'); if (p.version !== '0.4.0' || !p.bin || p.bin['ask-colleague'] !== 'bin/colleague' || p.bin.colleague !== 'bin/colleague') process.exit(1);"
 fi
 
 if command -v npm >/dev/null 2>&1; then
@@ -225,9 +225,9 @@ if command -v npm >/dev/null 2>&1; then
   pack_name="$(cd "$ROOT_DIR" && npm pack --pack-destination "$TMP_DIR" 2>/dev/null | tail -n 1)"
   tgz="$TMP_DIR/$pack_name"
   [[ -f "$tgz" ]]
-  npx_version="$(npx --yes --package "$tgz" agent-colleague --version)"
+  npx_version="$(npx --yes --package "$tgz" ask-colleague --version)"
   assert_contains "$npx_version" "0.4.0"
-  npx_install_dry_run="$(npx --yes --package "$tgz" agent-colleague install --dry-run --prefix "$TMP_DIR/npx-prefix")"
+  npx_install_dry_run="$(npx --yes --package "$tgz" ask-colleague install --dry-run --prefix "$TMP_DIR/npx-prefix")"
   assert_contains "$npx_install_dry_run" "Installed colleague binary"
   assert_contains "$npx_install_dry_run" "Skipped ~/.codex/AGENTS.md fallback block"
 fi

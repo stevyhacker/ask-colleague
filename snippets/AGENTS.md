@@ -1,4 +1,4 @@
-<!-- BEGIN agent-colleague bridge -->
+<!-- BEGIN ask-colleague bridge -->
 ## Colleague bridge
 
 A `colleague` CLI may be available for a one-shot second opinion from Claude Code. Use it only when the user explicitly asks to "ask Claude", "ask a colleague", or after you have made a concrete attempt and are genuinely blocked.
@@ -21,4 +21,4 @@ Procedure:
    ```
 
 4. Treat Claude's response as advice from a peer, not ground truth. Compare it to your own analysis before acting. Do not start a nested or multi-turn agent-to-agent loop.
-<!-- END agent-colleague bridge -->
+<!-- END ask-colleague bridge -->

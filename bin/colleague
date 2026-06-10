@@ -5,10 +5,10 @@ set -euo pipefail
 
 VERSION="0.4.0"
 DEFAULT_MAX_BYTES="${COLLEAGUE_MAX_CONTEXT_BYTES:-120000}"
-STATE_DIR="${COLLEAGUE_STATE_DIR:-$HOME/.agent-colleague}"
+STATE_DIR="${COLLEAGUE_STATE_DIR:-$HOME/.ask-colleague}"
 MANIFEST="$STATE_DIR/install-manifest.tsv"
-AGENTS_BEGIN_MARK='<!-- BEGIN agent-colleague bridge -->'
-AGENTS_END_MARK='<!-- END agent-colleague bridge -->'
+AGENTS_BEGIN_MARK='<!-- BEGIN ask-colleague bridge -->'
+AGENTS_END_MARK='<!-- END ask-colleague bridge -->'
 
 usage() {
   cat <<'USAGE'
@@ -38,7 +38,7 @@ Install options:
   --agents-md           Also append the fallback Codex AGENTS.md block.
                         This is opt-in because it affects every Codex session.
   --force               Overwrite/remove existing files that are not tracked in
-                        the agent-colleague install manifest.
+                        the ask-colleague install manifest.
 
 Environment:
   COLLEAGUE_DEFAULT_PEER          codex or claude, used when `colleague ask` omits a peer.
@@ -48,7 +48,7 @@ Environment:
   COLLEAGUE_TIMEOUT               Default timeout in seconds.
   COLLEAGUE_VERBOSE=1             Keep peer CLI stderr/progress visible.
   COLLEAGUE_MAX_CONTEXT_BYTES     Default context-file size guard.
-  COLLEAGUE_STATE_DIR             Manifest/state directory, default ~/.agent-colleague.
+  COLLEAGUE_STATE_DIR             Manifest/state directory, default ~/.ask-colleague.
 
 Examples:
   ctx="$(mktemp -t colleague-ctx.XXXXXX.md)"
@@ -56,7 +56,7 @@ Examples:
   colleague ask codex --context "$ctx" --question "Review this plan"
   colleague ask claude --context "$ctx" --question "Find flaws"
   COLLEAGUE_DEFAULT_PEER=codex colleague ask --context "$ctx" --question "Review this"
-  npx agent-colleague@latest install
+  npx ask-colleague@latest install
 USAGE
 }
 
@@ -147,7 +147,7 @@ run_project_script() {
   shift
   local root
   if ! root="$(package_root)"; then
-    die "cannot find packaged install assets; run from a source checkout or use: npx agent-colleague@latest ${script_name%.sh}"
+    die "cannot find packaged install assets; run from a source checkout or use: npx ask-colleague@latest ${script_name%.sh}"
   fi
   exec "$root/$script_name" "$@"
 }
@@ -183,7 +183,7 @@ strip_agents_block() {
     END { if (skipping) exit 2 }
   ' "$agents" > "$tmp"; then
     rm -f "$tmp"
-    printf 'Refusing to strip incomplete agent-colleague block from %s: missing end marker.\n' "$agents" >&2
+    printf 'Refusing to strip incomplete ask-colleague block from %s: missing end marker.\n' "$agents" >&2
     return 1
   fi
 
@@ -200,7 +200,7 @@ fallback_uninstall_force_legacy() {
   local prefix="$1"
   local dry_run="$2"
 
-  run_fs "$dry_run" rm -f "$prefix/bin/colleague" "$prefix/bin/agent-colleague"
+  run_fs "$dry_run" rm -f "$prefix/bin/colleague" "$prefix/bin/ask-colleague"
   run_fs "$dry_run" rm -f "$HOME/.claude/skills/colleague/SKILL.md"
   run_fs "$dry_run" rm -f "$HOME/.agents/skills/colleague/SKILL.md" "$HOME/.agents/skills/colleague/agents/openai.yaml"
   run_fs "$dry_run" rmdir "$HOME/.agents/skills/colleague/agents" 2>/dev/null || true
@@ -227,11 +227,11 @@ fallback_uninstall() {
         cat <<'UNINSTALL_HELP'
 Usage: colleague uninstall [--prefix DIR] [--force] [--dry-run]
 
-By default, uninstall reads ~/.agent-colleague/install-manifest.tsv and removes
+By default, uninstall reads ~/.ask-colleague/install-manifest.tsv and removes
 only files that this package installed and that have not been modified.
 
 Use --force only for legacy installs without a manifest or to remove modified
-agent-colleague files intentionally.
+ask-colleague files intentionally.
 UNINSTALL_HELP
         return 0 ;;
       *)
@@ -285,7 +285,7 @@ UNINSTALL_HELP
   if [[ "$failures" == "0" ]]; then
     run_fs "$dry_run" rm -f "$MANIFEST"
     run_fs "$dry_run" rmdir "$STATE_DIR" 2>/dev/null || true
-    printf 'Removed files tracked by the agent-colleague install manifest.\n'
+    printf 'Removed files tracked by the ask-colleague install manifest.\n'
   else
     printf 'Uninstall incomplete because one or more tracked files were modified or could not be safely removed.\n' >&2
     return 1

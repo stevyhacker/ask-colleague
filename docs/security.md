@@ -1,6 +1,6 @@
 # Security notes
 
-`agent-colleague` is a convenience bridge, not a trust boundary. It sends whatever you put in the context file to another local AI CLI authenticated as you.
+`ask-colleague` is a convenience bridge, not a trust boundary. It sends whatever you put in the context file to another local AI CLI authenticated as you.
 
 ## Principles
 
@@ -51,7 +51,7 @@ claude --bare -p --output-format text --no-session-persistence --max-turns 1 --t
 `install.sh` writes a manifest to:
 
 ```text
-~/.agent-colleague/install-manifest.tsv
+~/.ask-colleague/install-manifest.tsv
 ```
 
 The manifest records installed files and checksums. Reinstall overwrites only files that are tracked and unmodified. Uninstall removes only tracked, unmodified files. Use `--force` for legacy installs or intentional replacement/removal.

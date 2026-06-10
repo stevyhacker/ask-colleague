@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PREFIX="${PREFIX:-$HOME/.local}"
-STATE_DIR="${COLLEAGUE_STATE_DIR:-$HOME/.agent-colleague}"
+STATE_DIR="${COLLEAGUE_STATE_DIR:-$HOME/.ask-colleague}"
 MANIFEST="$STATE_DIR/install-manifest.tsv"
 INSTALL_BIN=0
 INSTALL_CLAUDE=0
@@ -12,8 +12,8 @@ INSTALL_AGENTS_MD=0
 DRY_RUN=0
 FORCE=0
 
-AGENTS_BEGIN_MARK='<!-- BEGIN agent-colleague bridge -->'
-AGENTS_END_MARK='<!-- END agent-colleague bridge -->'
+AGENTS_BEGIN_MARK='<!-- BEGIN ask-colleague bridge -->'
+AGENTS_END_MARK='<!-- END ask-colleague bridge -->'
 
 usage() {
   cat <<'USAGE'
@@ -24,7 +24,7 @@ Default with no component flags is --all.
 
 Installs:
   bin/colleague                         -> $PREFIX/bin/colleague
-  bin/colleague                         -> $PREFIX/bin/agent-colleague
+  bin/colleague                         -> $PREFIX/bin/ask-colleague
   skills/claude/colleague/SKILL.md      -> ~/.claude/skills/colleague/SKILL.md
   skills/codex/colleague/SKILL.md       -> ~/.agents/skills/colleague/SKILL.md
   skills/codex/.../agents/openai.yaml   -> ~/.agents/skills/colleague/agents/openai.yaml
@@ -36,7 +36,7 @@ Optional:
 
 Safety:
   Existing files are overwritten only if they are tracked in the
-  ~/.agent-colleague install manifest and have not been modified.
+  ~/.ask-colleague install manifest and have not been modified.
   Use --force to overwrite intentionally.
 
 Set PREFIX=/some/path or pass --prefix DIR to choose the binary location.
@@ -127,8 +127,8 @@ safe_copy_file() {
     if [[ "$FORCE" != "1" ]] && ! manifest_file_matches "$dst"; then
       cat >&2 <<MSG
 Refusing to overwrite existing file: $dst
-It is not tracked as an unmodified agent-colleague install.
-Re-run with --force if this file belongs to agent-colleague and should be replaced.
+It is not tracked as an unmodified ask-colleague install.
+Re-run with --force if this file belongs to ask-colleague and should be replaced.
 MSG
       exit 1
     fi
@@ -154,7 +154,7 @@ append_agents_block() {
 
   if [[ -f "$agents" ]] && grep -qF "$AGENTS_BEGIN_MARK" "$agents"; then
     if ! grep -qF "$AGENTS_END_MARK" "$agents"; then
-      die "$agents contains the agent-colleague begin marker but no end marker"
+      die "$agents contains the ask-colleague begin marker but no end marker"
     fi
     log "Codex AGENTS.md already contains the colleague block"
     manifest_record agents_block present "$agents"
@@ -210,9 +210,9 @@ fi
 
 if [[ "$INSTALL_BIN" == "1" ]]; then
   safe_copy_file "$ROOT_DIR/bin/colleague" "$PREFIX/bin/colleague" "+x"
-  safe_copy_file "$ROOT_DIR/bin/colleague" "$PREFIX/bin/agent-colleague" "+x"
+  safe_copy_file "$ROOT_DIR/bin/colleague" "$PREFIX/bin/ask-colleague" "+x"
   log "Installed colleague binary to $PREFIX/bin/colleague"
-  log "Installed agent-colleague alias to $PREFIX/bin/agent-colleague"
+  log "Installed ask-colleague alias to $PREFIX/bin/ask-colleague"
 fi
 
 if [[ "$INSTALL_CLAUDE" == "1" ]]; then
@@ -247,8 +247,8 @@ Next steps:
    Legacy custom prompt fallback: /prompts:colleague should I use a queue or cron here?
 
 For one-command public installs after publishing to npm:
-  npx agent-colleague@latest install
+  npx ask-colleague@latest install
 
 Optional global Codex AGENTS.md fallback:
-  npx agent-colleague@latest install --agents-md
+  npx ask-colleague@latest install --agents-md
 NEXT_STEPS
