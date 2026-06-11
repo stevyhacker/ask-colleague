@@ -24,11 +24,7 @@ Then trigger it with:
 
 ## Install
 
-```bash
-npx ask-colleague@latest install
-```
-
-This installs:
+The installer places these files:
 
 ```text
 ~/.local/bin/colleague
