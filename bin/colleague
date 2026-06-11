@@ -566,6 +566,7 @@ MAKE_CONTEXT_HELP
   {
     printf '# Colleague briefing\n\n'
     printf 'Generated: %s\n\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || date)"
+    # shellcheck disable=SC2016 # backticks are Markdown formatting, not expansion
     printf 'Working directory: `%s`\n\n' "$PWD"
     printf '## Goal\n\nDescribe the user-facing goal in 2-5 sentences.\n\n'
     printf '## Relevant files and snippets\n\nList paths and short snippets. Summarize large files.\n\n'
@@ -646,8 +647,8 @@ cmd_doctor() {
 }
 
 main() {
-  local cmd="${1:-}"
-  case "$cmd" in
+  local subcommand="${1:-}"
+  case "$subcommand" in
     ask)
       shift; cmd_ask "$@" ;;
     make-context)
@@ -668,7 +669,7 @@ main() {
     --version|version)
       printf '%s\n' "$VERSION" ;;
     *)
-      die "unknown command: $cmd" ;;
+      die "unknown command: $subcommand" ;;
   esac
 }
 

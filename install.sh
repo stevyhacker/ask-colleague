@@ -165,6 +165,8 @@ append_agents_block() {
     printf '+ append %q to %q\n' "$snippet" "$agents"
   else
     mkdir -p "$HOME/.codex"
+    # shellcheck disable=SC2094 # append mode does not truncate, so testing the
+    # target's size while redirecting to it is safe
     {
       if [[ -s "$agents" ]]; then printf '\n'; fi
       cat "$snippet"
