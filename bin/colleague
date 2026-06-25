@@ -3,7 +3,7 @@
 # Works with Codex (`codex exec -`) and Claude Code (`cat prompt | claude -p ...`).
 set -euo pipefail
 
-VERSION="0.1.1"
+VERSION="0.1.3"
 DEFAULT_MAX_BYTES="${COLLEAGUE_MAX_CONTEXT_BYTES:-120000}"
 STATE_DIR="${COLLEAGUE_STATE_DIR:-$HOME/.ask-colleague}"
 MANIFEST="$STATE_DIR/install-manifest.tsv"
@@ -416,13 +416,14 @@ ask_claude() {
 
   have claude || die "claude CLI not found in PATH"
 
-  # Keep the full consulting package on stdin to avoid shell arg limits. --bare
-  # avoids MCP auto-discovery, --tools "" disables built-in tools, and print mode
-  # plus --max-turns 1 keeps the consultation one-shot. Add -- before the
-  # positional prompt so it cannot be consumed by Claude's variadic --tools flag.
+  # Keep the full consulting package on stdin to avoid shell arg limits.
+  # --tools "" disables built-in tools, and print mode plus --max-turns 1 keeps
+  # the consultation one-shot. Add -- before the positional prompt so it cannot
+  # be consumed by Claude's variadic --tools flag. Do not use --bare here:
+  # Claude Code's bare mode skips OAuth/keychain auth, which breaks normal
+  # `claude -p` installations that do not have ANTHROPIC_API_KEY configured.
   local cmd=(
     claude
-    --bare
     -p
     --output-format text
     --no-session-persistence

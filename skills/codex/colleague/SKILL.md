@@ -35,7 +35,7 @@ Use this skill only when the user explicitly asks to "ask Claude", "ask a collea
      --question "What is the strongest critique of my current plan?"
    ```
 
-   Use `--model <model>` only when the user asks for a specific model. The bridge calls Claude in print mode with no session persistence, one max turn, `--bare`, and `--tools ""`.
+   Use `--model <model>` only when the user asks for a specific model. The bridge calls Claude in print mode with no session persistence, one max turn, and `--tools ""`.
 
 4. Treat the response as peer advice, not ground truth. Compare it to your own analysis.
 

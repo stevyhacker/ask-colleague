@@ -158,7 +158,7 @@ The consultation is intentionally one-shot and read-oriented:
 - Do not paste raw transcripts or include secrets, `.env` contents, keys, or tokens in the briefing.
 - The prompt is sent through stdin to avoid shell quoting and argument-length problems.
 - Codex runs via non-interactive `codex exec` with `--sandbox read-only` by default.
-- Claude runs with `--bare -p --output-format text --no-session-persistence --max-turns 1 --tools ""`.
+- Claude runs with `-p --output-format text --no-session-persistence --max-turns 1 --tools ""`.
 - Installed skills are explicit-only by default, so paid/authenticated CLIs are never called by surprise.
 - The peer response is advice only; the primary agent remains responsible for verifying and deciding.
 

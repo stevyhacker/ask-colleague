@@ -7,7 +7,7 @@
 1. **Minimize context.** A short, hand-written briefing is safer and more useful than a raw transcript.
 2. **No secrets.** Never include `.env` files, private keys, API tokens, cookies, credentials, proprietary customer data, or raw production logs.
 3. **One-shot by default.** Avoid agent-to-agent loops. If the answer is bad, rewrite the briefing and ask again.
-4. **Read-oriented.** Codex is invoked with `--sandbox read-only` by default. Claude is invoked with `--bare`, print mode, no session persistence, one max turn, `--tools ""`, and `--` before its positional prompt.
+4. **Read-oriented.** Codex is invoked with `--sandbox read-only` by default. Claude is invoked in print mode with no session persistence, one max turn, `--tools ""`, and `--` before its positional prompt.
 5. **Explicit-only skills.** The installed Claude and Codex skills are configured so the user or primary agent must invoke them intentionally.
 6. **Advice, not authority.** The primary agent/human reviews the peer’s answer before making changes.
 
@@ -41,10 +41,10 @@ You can opt into broader access with `--sandbox workspace-write` or `--sandbox d
 Claude Code is called with:
 
 ```bash
-claude --bare -p --output-format text --no-session-persistence --max-turns 1 --tools "" -- "Read the consulting request from stdin and answer it directly."
+claude -p --output-format text --no-session-persistence --max-turns 1 --tools "" -- "Read the consulting request from stdin and answer it directly."
 ```
 
-`--bare` avoids MCP auto-discovery, `--tools ""` disables built-in Claude Code tools for the consultant call, and `--` prevents the positional prompt from being consumed by the variadic `--tools` option. The bridge passes the consulting package on stdin.
+`--tools ""` disables built-in Claude Code tools for the consultant call, and `--` prevents the positional prompt from being consumed by the variadic `--tools` option. The bridge passes the consulting package on stdin. The bridge intentionally does not use `--bare` because Claude Code's bare mode skips OAuth/keychain auth and can fail even when `claude -p` works normally.
 
 ## Install and uninstall safety
 
